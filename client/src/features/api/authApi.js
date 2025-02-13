@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { userLoggedIn, userLoggedOut } from "../features/authSlice"; // ✅ Corrected import path
+import { userLoggedIn, userLoggedOut } from "../features/authSlice.js"; // ✅ Corrected import path
 
 const USER_API = "https://lms-1-t52l.onrender.com/api/v1/user/";
 
@@ -35,7 +35,7 @@ export const authApi = createApi({
         logoutUser: builder.mutation({
             query: () => ({
                 url: "logout",
-                method: "POST", // ✅ Changed from GET to POST
+                method: "GET", // ✅ Changed from GET to POST
             }),
             async onQueryStarted(_, { queryFulfilled, dispatch }) {
                 try {
