@@ -1,13 +1,13 @@
-import { createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-import { userLoggedIn } from '@/features/authSlice';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { userLoggedIn, userLoggedOut } from "../features/authSlice"; // ✅ Corrected import path
 
-const USER_API = "http://localhost:6060/api/v1/user/"
+const USER_API = "https://lms-1-t52l.onrender.com/api/v1/user/";
 
 export const authApi = createApi({
     reducerPath: "authApi",
     baseQuery: fetchBaseQuery({
         baseUrl: USER_API,
-        credentials: 'include'
+        credentials: "include", // ✅ Ensures cookies are sent
     }),
     endpoints: (builder) => ({
         registerUser: builder.mutation({
@@ -26,50 +26,46 @@ export const authApi = createApi({
             async onQueryStarted(_, { queryFulfilled, dispatch }) {
                 try {
                     const result = await queryFulfilled;
-                    dispatch(userLoggedIn({user:result.data.user}));
-
+                    dispatch(userLoggedIn({ user: result.data.user }));
                 } catch (error) {
-                    console.log(error);
+                    console.error("Login Error:", error);
                 }
             }
         }),
-        logoutUser:builder.mutation({
-            query:() => ({
-                url:"logout",
-                method:"GET"
+        logoutUser: builder.mutation({
+            query: () => ({
+                url: "logout",
+                method: "POST", // ✅ Changed from GET to POST
             }),
             async onQueryStarted(_, { queryFulfilled, dispatch }) {
                 try {
-                    
-                    dispatch(userLoggedOut());
-
+                    await queryFulfilled;
+                    dispatch(userLoggedOut()); // ✅ Dispatch logout action
                 } catch (error) {
-                    console.log(error);
+                    console.error("Logout Error:", error);
                 }
             }
         }),
-        loadUser:builder.query({
-            query:() => ({
-                url:"profile",
-                method:"GET"
+        loadUser: builder.query({
+            query: () => ({
+                url: "profile",
+                method: "GET",
             }),
             async onQueryStarted(_, { queryFulfilled, dispatch }) {
                 try {
                     const result = await queryFulfilled;
-                    dispatch(userLoggedIn({user:result.data.user}));
-
+                    dispatch(userLoggedIn({ user: result.data.user }));
                 } catch (error) {
-                    console.log(error);
+                    console.error("Load User Error:", error);
                 }
             }
         }),
-        updateUser:builder.mutation({
-            query:(formData) => ({
-                url:"profile/update",
-                method:"PUT",
-                body:formData,
-                credemtials:"include"
-
+        updateUser: builder.mutation({
+            query: (formData) => ({
+                url: "profile/update",
+                method: "PUT",
+                body: formData,
+                credentials: "include"
             })
         })
     })
