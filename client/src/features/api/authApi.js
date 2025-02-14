@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { userLoggedIn, userLoggedOut } from "../features/authSlice"; // ✅ Corrected import path
+import { userLoggedIn, userLoggedOut } from "../authSlice";
+ // ✅ Corrected import path
 
 const USER_API = "https://lms-1-t52l.onrender.com/api/v1/user/";
 
